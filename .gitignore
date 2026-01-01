@@ -2,7 +2,8 @@
 dist/
 .output/
 .vercel/
-
+.astro/
+.vscode/
 # dependencies
 node_modules/
 
