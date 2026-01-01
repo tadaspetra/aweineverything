@@ -1,5 +1,15 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
+
+const essays = await getCollection("essays", ({ data }) => !data.draft);
+
+const sortedEssays = essays
+  .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf())
+  .map((essay) => ({
+    title: essay.data.title,
+    slug: essay.id.split("/").pop()?.replace(/\.md$/, "") ?? essay.id,
+  }));
 ---
 
 <Layout>
@@ -38,9 +48,22 @@ import Layout from "../layouts/Layout.astro";
         And that feeling is awe.
       </p>
 
-      <h2 class="mt-16">latest posts</h2>
+      <h2 class="mt-16">latest essays</h2>
       <div class="space-y-0">
-        <p>nothing yet</p>
+        {
+          sortedEssays.length === 0 ? (
+            <p class="text-neutral-500 dark:text-neutral-400">nothing yet</p>
+          ) : (
+            sortedEssays.map((essay) => (
+              <a
+                href={`/${essay.slug}`}
+                class="plain-link block px-4 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm sm:text-base"
+              >
+                {essay.title}
+              </a>
+            ))
+          )
+        }
       </div>
     </div>
   </main>

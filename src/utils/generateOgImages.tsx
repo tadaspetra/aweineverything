@@ -1,7 +1,9 @@
 import satori, { type SatoriOptions } from "satori";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { CollectionEntry } from "astro:content";
 import siteOgImage from "./og-templates/site";
+import essayOgImage from "./og-templates/essay";
 
 const fontPath = join(
   process.cwd(),
@@ -38,5 +40,10 @@ async function svgBufferToPngBuffer(svg: string) {
 
 export async function generateOgImageForSite() {
   const svg = await satori(siteOgImage(), options);
+  return svgBufferToPngBuffer(svg);
+}
+
+export async function generateOgImageForEssay(essay: CollectionEntry<"essays">) {
+  const svg = await satori(essayOgImage(essay), options);
   return svgBufferToPngBuffer(svg);
 }

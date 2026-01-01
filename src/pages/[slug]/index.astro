@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const essays = await getCollection("essays", ({ data }) => !data.draft);
+
+  return essays.map((essay) => {
+    const slug = essay.id.split("/").pop()?.replace(/\.md$/, "") ?? essay.id;
+    return {
+      params: { slug },
+      props: { essay, slug },
+    };
+  });
+}
+
+const { essay, slug } = Astro.props;
+const { Content } = await essay.render();
+
+const ogImage = `/${slug}/index.png`;
+---
+
+<Layout
+  title={essay.data.title}
+  description={essay.data.description}
+  ogImage={ogImage}
+>
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
+    <article class="prose dark:prose-invert prose-neutral max-w-none">
+      <h1 class="mb-0">{essay.data.title}</h1>
+      <Content />
+    </article>
+  </main>
+</Layout>
