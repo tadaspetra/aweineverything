@@ -6,8 +6,15 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://aweineverything.com",
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      external: ["@resvg/resvg-js"],
+    },
+    optimizeDeps: {
+      exclude: ["@resvg/resvg-js"],
+    },
   },
   adapter: vercel({
     webAnalytics: {
