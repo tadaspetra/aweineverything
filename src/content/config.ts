@@ -7,6 +7,14 @@ const essays = defineCollection({
     title: z.string(),
     draft: z.boolean().optional(),
     description: z.string(),
+    sources: z
+      .array(
+        z.object({
+          title: z.string(),
+          url: z.string().url(),
+        })
+      )
+      .optional(),
   }),
 });
 
