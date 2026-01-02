@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { Sources } from "../../components/mdx";
 
 export async function getStaticPaths() {
   const essays = await getCollection("essays", ({ data }) => !data.draft);
@@ -28,11 +29,12 @@ const ogImage = `/${slug}/index.png`;
   <main class="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
     <article class="prose dark:prose-invert prose-neutral max-w-none">
       <h1 class="mb-0 pb-0">{essay.data.title}</h1>
-      <p class="text-neutral-500 dark:text-neutral-400 pb-16">
+      <p class="text-neutral-500 dark:text-neutral-400 pb-4">
         an essay by <a href="https://tadaspetra.com" target="_blank"
           >Tadas Petra</a
         >
       </p>
+      <Sources sources={essay.data.sources ?? []} client:load />
       <Content />
     </article>
   </main>
