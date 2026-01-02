@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   );
 
   return essays.map((essay) => {
-    const slug = essay.id.split("/").pop()?.replace(/\.md$/, "") ?? essay.id;
+    const slug = essay.id.split("/").pop()?.replace(/\.mdx?$/, "") ?? essay.id;
     return {
       params: { slug },
       props: essay,

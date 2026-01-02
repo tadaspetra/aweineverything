@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import astroExpressiveCode from "astro-expressive-code";
+import mdx from "@astrojs/mdx";
+import react from "@astrojs/react";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 
 // https://astro.build/config
@@ -30,6 +32,8 @@ export default defineConfig({
         },
       },
     }),
+    mdx(),
+    react(),
   ],
   vite: {
     plugins: [tailwindcss()],

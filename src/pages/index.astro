@@ -8,7 +8,7 @@ const sortedEssays = essays
   .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf())
   .map((essay) => ({
     title: essay.data.title,
-    slug: essay.id.split("/").pop()?.replace(/\.md$/, "") ?? essay.id,
+    slug: essay.id.split("/").pop()?.replace(/\.mdx?$/, "") ?? essay.id,
   }));
 ---
 
