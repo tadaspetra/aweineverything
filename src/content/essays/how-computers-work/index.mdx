@@ -2,7 +2,6 @@
 title: How Computers Work
 description: A deep dive into how computers work.
 pubDatetime: 2026-01-01
-draft: true
 sources:
   - title: Timeline of Computer History
     url: https://www.computerhistory.org/timeline/computers/
@@ -20,7 +19,7 @@ sources:
     url: https://en.wikipedia.org/wiki/Bipolar_junction_transistor
 ---
 
-import SeriesAndGate from './_components/SeriesAndGate.tsx';
+import SwitchAndGate from './_components/SwitchAndGate.tsx';
 
 In college, I decided to study Computer Engineering, solely because I could not understand how you can turn electricity into everything we use computers for. How does the same thing that turns on a light bulb:
 
@@ -112,7 +111,7 @@ We've been using the AND logic in our examples thus far, so let's create an AND 
 
 When using switches, it would be two switches in a row (*in series*, as the nerds call it). If both A and B are open, electricity does not flow. If only one of them is open, it still does not flow. But if **A AND B** are closed, electricity flows.
 
-<SeriesAndGate client:load />
+<SwitchAndGate client:load />
 
 Now with transistors, we can do the same thing without physical switches. Electricity is coming from the top. If neither A nor B has voltage, electricity does not flow. If only one of them has voltage, it still does not flow. But if both **A AND B** have voltage, electricity flows.
 
