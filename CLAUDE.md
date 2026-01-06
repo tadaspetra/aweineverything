@@ -39,3 +39,16 @@ Astro 5 static site deployed to Vercel with Tailwind CSS v4.
 - Custom theme variables defined in `global.css` using `@theme` directive
 - Dark mode uses class strategy with localStorage persistence
 - Links have a custom hand-drawn underline effect (SVG-based)
+
+## Interactive Components
+
+This repo features interactive SVG-based components embedded in essays (circuit diagrams, visualizations, etc.). When building or modifying these components, the `interactive-components` skill will automatically apply with comprehensive standards for:
+
+- Visual integration (no borders, seamless with article flow)
+- Light/dark mode support
+- Touch & mobile responsiveness
+- SVG layering and render order
+- Animation with requestAnimationFrame
+- Circuit/electrical component conventions
+
+See `.claude/skills/interactive-components/SKILL.md` for full standards.

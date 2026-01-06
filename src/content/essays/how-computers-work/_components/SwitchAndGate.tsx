@@ -68,8 +68,8 @@ export default function SwitchAndGate() {
 
   // Path coordinates for particle animation
   const getParticlePosition = (progress: number) => {
-    // Total path: power(30) -> switchA(130) -> switchA_end(210) -> switchB(330) -> switchB_end(410) -> out(530)
-    const totalLength = 500;
+    // Total path: power(30) -> switchA(130) -> switchA_end(210) -> switchB(330) -> switchB_end(410) -> out(505)
+    const totalLength = 475;
     const x = 30 + progress * totalLength;
     return { x, y: 60 };
   };
@@ -78,7 +78,7 @@ export default function SwitchAndGate() {
   const getElectricityEnd = () => {
     if (!switches.a) return 130; // Stop at switch A
     if (!switches.b) return 330; // Stop at switch B
-    return 530; // Full circuit
+    return 510; // Full circuit (to lightbulb)
   };
 
   const electricityEnd = getElectricityEnd();
@@ -86,7 +86,7 @@ export default function SwitchAndGate() {
   return (
     <div className="my-12 -mx-4 sm:mx-0">
       <svg
-        viewBox="0 0 560 120"
+        viewBox="-5 -10 560 140"
         className="w-full h-auto"
         style={{ minHeight: "100px" }}
       >
@@ -133,11 +133,22 @@ export default function SwitchAndGate() {
         </defs>
 
         {/* ============ BASE WIRE (inactive) ============ */}
+        {/* Horizontal */}
         <line
           x1="30"
           y1="60"
-          x2="530"
+          x2="510"
           y2="60"
+          className="stroke-neutral-300 dark:stroke-neutral-700"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        {/* 90-degree turn up to lightbulb */}
+        <line
+          x1="510"
+          y1="60"
+          x2="510"
+          y2="52"
           className="stroke-neutral-300 dark:stroke-neutral-700"
           strokeWidth="2"
           strokeLinecap="round"
@@ -147,7 +158,7 @@ export default function SwitchAndGate() {
         <line
           x1="30"
           y1="60"
-          x2={electricityEnd}
+          x2={Math.min(electricityEnd, 510)}
           y2="60"
           className="stroke-amber-400 dark:stroke-yellow-400"
           strokeWidth="3"
@@ -156,6 +167,18 @@ export default function SwitchAndGate() {
             transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
           }}
         />
+        {/* Vertical up to lightbulb when complete */}
+        {isCircuitComplete && (
+          <line
+            x1="510"
+            y1="60"
+            x2="510"
+            y2="52"
+            className="stroke-amber-400 dark:stroke-yellow-400"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        )}
 
         {/* ============ ELECTRICITY PARTICLES ============ */}
         {isCircuitComplete &&
@@ -181,7 +204,7 @@ export default function SwitchAndGate() {
           })}
 
         {/* ============ POWER SOURCE ============ */}
-        <g className="text-amber-500 dark:text-yellow-400">
+        <g className="text-amber-400 dark:text-yellow-400">
           {/* Battery symbol */}
           <line
             x1="10"
@@ -235,7 +258,7 @@ export default function SwitchAndGate() {
             textAnchor="middle"
             className={`select-none transition-colors duration-300 ${
               switches.a
-                ? "fill-amber-500 dark:fill-yellow-400"
+                ? "fill-amber-400 dark:fill-yellow-400"
                 : "fill-neutral-500 dark:fill-neutral-500"
             }`}
           >
@@ -249,7 +272,7 @@ export default function SwitchAndGate() {
             r="5"
             className={`transition-colors duration-300 group-hover:stroke-amber-400 ${
               switches.a
-                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-500 dark:stroke-yellow-500"
+                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-400 dark:stroke-yellow-500"
                 : "fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
             }`}
             strokeWidth="2"
@@ -260,7 +283,7 @@ export default function SwitchAndGate() {
             r="5"
             className={`transition-colors duration-300 group-hover:stroke-amber-400 ${
               switches.a
-                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-500 dark:stroke-yellow-500"
+                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-400 dark:stroke-yellow-500"
                 : "fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
             }`}
             strokeWidth="2"
@@ -274,7 +297,7 @@ export default function SwitchAndGate() {
             y2={switches.a ? "60" : "25"}
             className={`transition-all duration-500 ease-out group-hover:stroke-amber-400 ${
               switches.a
-                ? "stroke-amber-500 dark:stroke-yellow-400"
+                ? "stroke-amber-400 dark:stroke-yellow-400"
                 : "stroke-neutral-500 dark:stroke-neutral-500"
             }`}
             strokeWidth="3"
@@ -296,7 +319,7 @@ export default function SwitchAndGate() {
             textAnchor="middle"
             className={`select-none transition-colors duration-300 ${
               switches.b
-                ? "fill-amber-500 dark:fill-yellow-400"
+                ? "fill-amber-400 dark:fill-yellow-400"
                 : "fill-neutral-500 dark:fill-neutral-500"
             }`}
           >
@@ -310,7 +333,7 @@ export default function SwitchAndGate() {
             r="5"
             className={`transition-colors duration-300 group-hover:stroke-amber-400 ${
               switches.a
-                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-500 dark:stroke-yellow-500"
+                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-400 dark:stroke-yellow-500"
                 : "fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
             }`}
             strokeWidth="2"
@@ -321,7 +344,7 @@ export default function SwitchAndGate() {
             r="5"
             className={`transition-colors duration-300 group-hover:stroke-amber-400 ${
               isCircuitComplete
-                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-500 dark:stroke-yellow-500"
+                ? "fill-amber-400 dark:fill-yellow-400 stroke-amber-400 dark:stroke-yellow-500"
                 : "fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
             }`}
             strokeWidth="2"
@@ -335,7 +358,7 @@ export default function SwitchAndGate() {
             y2={switches.b ? "60" : "25"}
             className={`transition-all duration-500 ease-out group-hover:stroke-amber-400 ${
               switches.b
-                ? "stroke-amber-500 dark:stroke-yellow-400"
+                ? "stroke-amber-400 dark:stroke-yellow-400"
                 : "stroke-neutral-500 dark:stroke-neutral-500"
             }`}
             strokeWidth="3"
@@ -346,28 +369,84 @@ export default function SwitchAndGate() {
           <rect x="310" y="15" width="120" height="60" fill="transparent" />
         </g>
 
-        {/* ============ OUTPUT INDICATOR ============ */}
+        {/* ============ OUTPUT INDICATOR (Lightbulb - wire turns up into bottom) ============ */}
         <g>
-          {/* Output circle/bulb */}
-          <circle
-            cx="530"
-            cy="60"
-            r="12"
+          {/* Glass bulb on TOP */}
+          <ellipse
+            cx="510"
+            cy="22"
+            rx="18"
+            ry="20"
             className={`transition-all duration-500 ${
               isCircuitComplete
-                ? "fill-amber-400 dark:fill-yellow-400"
-                : "fill-neutral-200 dark:fill-neutral-800"
+                ? "fill-amber-200 dark:fill-yellow-200"
+                : "fill-neutral-100 dark:fill-neutral-800"
             }`}
             style={{
               filter: isCircuitComplete ? "url(#glow)" : "none",
             }}
           />
-          <circle
-            cx="530"
-            cy="60"
-            r="12"
-            className="fill-none stroke-neutral-400 dark:stroke-neutral-600"
+          {/* Inner glow when on */}
+          {isCircuitComplete && (
+            <ellipse
+              cx="510"
+              cy="22"
+              rx="11"
+              ry="13"
+              className="fill-amber-300 dark:fill-yellow-300"
+              style={{ opacity: 0.6 }}
+            />
+          )}
+          {/* Bulb outline */}
+          <ellipse
+            cx="510"
+            cy="22"
+            rx="18"
+            ry="20"
+            fill="none"
+            className={`transition-all duration-300 ${
+              isCircuitComplete
+                ? "stroke-amber-400 dark:stroke-yellow-400"
+                : "stroke-neutral-400 dark:stroke-neutral-600"
+            }`}
             strokeWidth="2"
+          />
+          {/* Screw base */}
+          <rect
+            x="500"
+            y="40"
+            width="20"
+            height="12"
+            className={`transition-colors duration-300 ${
+              isCircuitComplete
+                ? "fill-neutral-400 dark:fill-neutral-500"
+                : "fill-neutral-300 dark:fill-neutral-600"
+            }`}
+          />
+          {/* Screw threads */}
+          <line x1="500" y1="44" x2="520" y2="44" className="stroke-neutral-500 dark:stroke-neutral-700" strokeWidth="1" />
+          <line x1="500" y1="48" x2="520" y2="48" className="stroke-neutral-500 dark:stroke-neutral-700" strokeWidth="1" />
+          {/* Bottom contact (wire turns up into here) */}
+          <rect
+            x="505"
+            y="52"
+            width="10"
+            height="4"
+            rx="1"
+            className={`transition-colors duration-300 ${
+              isCircuitComplete
+                ? "fill-amber-400 dark:fill-yellow-500"
+                : "fill-neutral-400 dark:fill-neutral-600"
+            }`}
+          />
+          {/* Filament (visible when off) */}
+          <path
+            d="M504,22 L510,12 L516,22"
+            fill="none"
+            className="stroke-neutral-400 dark:stroke-neutral-500"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             style={{
               opacity: isCircuitComplete ? 0 : 1,
               transition: "opacity 0.3s",
@@ -385,13 +464,13 @@ export default function SwitchAndGate() {
           fontFamily="ui-monospace, monospace"
         >
           <tspan
-            className={switches.a ? "fill-amber-500 dark:fill-yellow-400" : ""}
+            className={switches.a ? "fill-amber-400 dark:fill-yellow-400" : ""}
           >
             A
           </tspan>
           <tspan> ∧ </tspan>
           <tspan
-            className={switches.b ? "fill-amber-500 dark:fill-yellow-400" : ""}
+            className={switches.b ? "fill-amber-400 dark:fill-yellow-400" : ""}
           >
             B
           </tspan>
