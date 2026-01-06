@@ -501,7 +501,7 @@ export default function SwitchAndGate() {
       </svg>
 
       {/* Subtle interaction hint */}
-      <p className="text-center text-neutral-400 dark:text-neutral-600 text-xs mt-2 opacity-60">
+      <p className="text-center text-neutral-400 dark:text-neutral-300 text-xs mt-2 opacity-60 dark:opacity-80">
         click the switches
       </p>
     </div>

@@ -42,6 +42,32 @@ export default function RGBLightDemo() {
   };
 
   const anyLightOn = lights.r || lights.g || lights.b;
+  const isWhite = lights.r && lights.g && lights.b;
+
+  // Define consistent border radius for top corners
+  const topRadius = 8;
+  const frameTopY = 16;
+  const pixelTopY = frameTopY;
+  const shadowTopY = frameTopY + 2; // 2px inset for shadow
+
+  // Calculate path strings with consistent radius
+  const pixelPath = `M 50 49 L 50 ${pixelTopY + topRadius} Q 50 ${pixelTopY}, ${
+    50 + topRadius
+  } ${pixelTopY} L ${270 - topRadius} ${pixelTopY} Q 270 ${pixelTopY}, 270 ${
+    pixelTopY + topRadius
+  } L 270 49 Z`;
+  const framePath = `M 50 160 L 50 ${
+    frameTopY + topRadius
+  } Q 50 ${frameTopY}, ${50 + topRadius} ${frameTopY} L ${
+    270 - topRadius
+  } ${frameTopY} Q 270 ${frameTopY}, 270 ${frameTopY + topRadius} L 270 160`;
+  const shadowPath = `M 52 47 L 52 ${
+    shadowTopY + topRadius - 2
+  } Q 52 ${shadowTopY}, ${52 + topRadius - 2} ${shadowTopY} L ${
+    268 - topRadius + 2
+  } ${shadowTopY} Q 268 ${shadowTopY}, 268 ${
+    shadowTopY + topRadius - 2
+  } L 268 47 L 52 47 Z`;
 
   // LED component - classic through-hole LED shape
   const LED = ({
@@ -138,18 +164,61 @@ export default function RGBLightDemo() {
             <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
             <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.6" />
           </linearGradient>
+
+          {/* Pixel grid pattern */}
+          <pattern
+            id="pixelGrid"
+            width="8"
+            height="8"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect width="8" height="8" fill="transparent" />
+            <rect width="7" height="7" fill="black" fillOpacity="0.1" rx="1" />
+          </pattern>
+
+          {/* Pixel glow filter */}
+          <filter id="pixelGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          {/* Clip path for pixel area - using defined radius */}
+          <clipPath id="pixelClip">
+            <path d={pixelPath} />
+          </clipPath>
         </defs>
 
         {/* Pixel screen at top - rendered first so frame overlaps */}
-        <path
-          d="M 50 49 L 50 20 Q 50 16, 54 16 L 266 16 Q 270 16, 270 20 L 270 49 Z"
-          fill={getPixelColor()}
-          className="transition-all duration-300"
-        />
+        <g style={{ filter: anyLightOn ? "url(#pixelGlow)" : "none" }}>
+          {/* Base pixel color - using defined radius */}
+          <path
+            d={pixelPath}
+            fill={getPixelColor()}
+            className="transition-all duration-300"
+          />
+          {/* Pixel grid overlay */}
+          <path
+            d={pixelPath}
+            fill="url(#pixelGrid)"
+            className="transition-opacity duration-300"
+            style={{ opacity: anyLightOn ? 0.5 : 0.3 }}
+          />
+          {/* Subtle inner shadow/depth - slightly inset from pixel edges, all sides, less radius */}
+          <path
+            d={shadowPath}
+            fill="none"
+            stroke="black"
+            strokeWidth="3"
+            strokeOpacity={isWhite ? 0.05 : anyLightOn ? 0.1 : 0.15}
+          />
+        </g>
 
-        {/* Housing frame - open at bottom */}
+        {/* Housing frame - open at bottom, using defined radius */}
         <path
-          d="M 50 160 L 50 20 Q 50 16, 54 16 L 266 16 Q 270 16, 270 20 L 270 160"
+          d={framePath}
           fill="none"
           className="stroke-neutral-300 dark:stroke-neutral-600"
           strokeWidth="2"
@@ -232,7 +301,7 @@ export default function RGBLightDemo() {
       </svg>
 
       {/* Hint */}
-      <p className="text-center text-neutral-400 dark:text-neutral-600 text-xs mt-2 opacity-50">
+      <p className="text-center text-neutral-400 dark:text-neutral-300 text-xs mt-2 opacity-50 dark:opacity-70">
         click the LEDs
       </p>
     </div>
