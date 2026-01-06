@@ -424,8 +424,22 @@ export default function SwitchAndGate() {
             }`}
           />
           {/* Screw threads */}
-          <line x1="500" y1="44" x2="520" y2="44" className="stroke-neutral-500 dark:stroke-neutral-700" strokeWidth="1" />
-          <line x1="500" y1="48" x2="520" y2="48" className="stroke-neutral-500 dark:stroke-neutral-700" strokeWidth="1" />
+          <line
+            x1="500"
+            y1="44"
+            x2="520"
+            y2="44"
+            className="stroke-neutral-500 dark:stroke-neutral-700"
+            strokeWidth="1"
+          />
+          <line
+            x1="500"
+            y1="48"
+            x2="520"
+            y2="48"
+            className="stroke-neutral-500 dark:stroke-neutral-700"
+            strokeWidth="1"
+          />
           {/* Bottom contact (wire turns up into here) */}
           <rect
             x="505"

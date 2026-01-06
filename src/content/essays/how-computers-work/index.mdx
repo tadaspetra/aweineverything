@@ -23,6 +23,7 @@ sources:
 import SwitchAndGate from './_components/SwitchAndGate.tsx';
 import TransistorAndGate from './_components/TransistorAndGate.tsx';
 import SwitchAndTransistor from './_components/SwitchAndTransistor.tsx';
+import RGBLightDemo from './_components/RGBLightDemo.tsx';
 
 In college, I decided to study Computer Engineering, solely because I could not understand how you can turn electricity into everything we use computers for. How does the same thing that turns on a light bulb:
 
@@ -155,7 +156,7 @@ These 1's and 0's are still used to this day.
 
 Let's use your computer screen to walk through an example. Your screen is millions of individual pixels. And each of these can be many different colors using RGB. This means every pixel is actually 3 different (red, green, blue) lights that, when paired together, can make a wide range of colors.
 
-// INSERT LIGHT DEMO HERE ——————————————————————————————————
+<RGBLightDemo client:load />
 
 Each one of these lights can be **ON** or **OFF**. If the red light is programmed to be **ON** and the other two are **OFF**, your pixel will show red. If red and green are on, you make yellow. And if all 3 are on, you make white. To turn on a pixel, you write a program that tells each of these individuals' lights to turn on, depending on what color you want.
 
