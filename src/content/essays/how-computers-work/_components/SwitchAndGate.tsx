@@ -181,7 +181,7 @@ export default function SwitchAndGate() {
           })}
 
         {/* ============ POWER SOURCE ============ */}
-        <g className="text-neutral-600 dark:text-neutral-400">
+        <g className="text-amber-500 dark:text-yellow-400">
           {/* Battery symbol */}
           <line
             x1="10"
@@ -198,7 +198,7 @@ export default function SwitchAndGate() {
             x2="20"
             y2="70"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="3"
             strokeLinecap="round"
           />
           <line
@@ -207,7 +207,7 @@ export default function SwitchAndGate() {
             x2="30"
             y2="60"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="3"
             strokeLinecap="round"
           />
 

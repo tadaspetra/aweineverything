@@ -63,23 +63,26 @@ export default function TransistorAndGate() {
     setInputs((prev) => ({ ...prev, [which]: !prev[which] }));
   };
 
-  // Path for particle animation (vertical flow from V to Out)
+  // Path for particle animation (vertical flow from V to junction, then to output)
   const getParticlePosition = (progress: number) => {
-    // Vertical path from top (V) to bottom (Out)
+    // Vertical path from top (V) to junction point, then horizontal to output
     const startY = 35;
-    const endY = 365;
-    const y = startY + progress * (endY - startY);
-    return { x: 200, y };
+    const junctionY = 310;
+    const outputX = 280;
+    
+    // 0 to 0.85: vertical movement from V to junction
+    // 0.85 to 1: horizontal movement from junction to output
+    if (progress < 0.85) {
+      const verticalProgress = progress / 0.85;
+      const y = startY + verticalProgress * (junctionY - startY);
+      return { x: 200, y };
+    } else {
+      const horizontalProgress = (progress - 0.85) / 0.15;
+      const x = 200 + horizontalProgress * (outputX - 200);
+      return { x, y: junctionY };
+    }
   };
 
-  // How far electricity flows based on input states
-  const getElectricityEndY = () => {
-    if (!inputs.a) return 95; // Stop at transistor A collector
-    if (!inputs.b) return 215; // Stop at transistor B collector
-    return 365; // Full circuit to output
-  };
-
-  const electricityEndY = getElectricityEndY();
 
   return (
     <div className="my-12 -mx-4 sm:mx-0">
@@ -117,25 +120,121 @@ export default function TransistorAndGate() {
           </filter>
         </defs>
 
-        {/* ============ MAIN VERTICAL WIRE (inactive) ============ */}
+        {/* ============ PULL-DOWN RESISTOR & GROUND (rendered FIRST, behind everything) ============ */}
+        {/* Vertical wire down from junction to resistor */}
         <line
           x1="200"
-          y1="35"
+          y1="310"
           x2="200"
-          y2="365"
+          y2="325"
           className="stroke-neutral-300 dark:stroke-neutral-700"
           strokeWidth="2"
           strokeLinecap="round"
         />
 
-        {/* ============ ACTIVE WIRE (shows electricity progress) ============ */}
+        {/* Resistor symbol (vertical) */}
+        <path
+          d="M200,325 L208,330 L192,340 L208,350 L192,360 L200,365"
+          fill="none"
+          className="stroke-neutral-400 dark:stroke-neutral-600"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* R_Out label */}
+        <text
+          x="225"
+          y="350"
+          fontSize="11"
+          className="fill-neutral-400 dark:fill-neutral-600 select-none"
+        >
+          R
+          <tspan fontSize="8" dy="2">Out</tspan>
+        </text>
+
+        {/* Ground symbol */}
+        <g className="text-neutral-500 dark:text-neutral-600">
+          <line
+            x1="200"
+            y1="365"
+            x2="200"
+            y2="380"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="185"
+            y1="380"
+            x2="215"
+            y2="380"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="190"
+            y1="386"
+            x2="210"
+            y2="386"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="195"
+            y1="392"
+            x2="205"
+            y2="392"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+        </g>
+
+        {/* ============ VERTICAL WIRES (segmented to not pass through transistors) ============ */}
+        {/* Segment 1: Voltage source to Transistor A top (y=35 to y=92) */}
         <line
           x1="200"
           y1="35"
           x2="200"
-          y2={electricityEndY}
+          y2="92"
           className="stroke-amber-400 dark:stroke-yellow-400"
           strokeWidth="3"
+          strokeLinecap="round"
+        />
+
+        {/* Segment 2: Transistor A bottom to Transistor B top (y=148 to y=212) */}
+        <line
+          x1="200"
+          y1="148"
+          x2="200"
+          y2="212"
+          className={`transition-colors duration-300 ${
+            inputs.a
+              ? "stroke-amber-400 dark:stroke-yellow-400"
+              : "stroke-neutral-300 dark:stroke-neutral-700"
+          }`}
+          strokeWidth={inputs.a ? 3 : 2}
+          strokeLinecap="round"
+          style={{
+            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        />
+
+        {/* Segment 3: Transistor B bottom to junction point (y=268 to y=310) */}
+        <line
+          x1="200"
+          y1="268"
+          x2="200"
+          y2="310"
+          className={`transition-colors duration-300 ${
+            isCircuitComplete
+              ? "stroke-amber-400 dark:stroke-yellow-400"
+              : "stroke-neutral-300 dark:stroke-neutral-700"
+          }`}
+          strokeWidth={isCircuitComplete ? 3 : 2}
           strokeLinecap="round"
           style={{
             transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -165,40 +264,62 @@ export default function TransistorAndGate() {
             );
           })}
 
-        {/* ============ VOLTAGE SOURCE (V) ============ */}
-        <g className="text-neutral-600 dark:text-neutral-400">
-          <circle
-            cx="200"
-            cy="20"
-            r="14"
-            className="fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
-            strokeWidth="2"
+        {/* ============ VOLTAGE SOURCE (Battery) ============ */}
+        <g className="text-amber-500 dark:text-yellow-400">
+          {/* Battery positive line (longer) */}
+          <line
+            x1="188"
+            y1="8"
+            x2="212"
+            y2="8"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
           />
+          {/* Battery negative line (shorter) */}
+          <line
+            x1="192"
+            y1="18"
+            x2="208"
+            y2="18"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          {/* Connecting wire to circuit */}
+          <line
+            x1="200"
+            y1="18"
+            x2="200"
+            y2="35"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          {/* + symbol */}
           <text
-            x="200"
-            y="25"
-            fontSize="14"
-            fontWeight="600"
-            textAnchor="middle"
-            className="fill-neutral-600 dark:fill-neutral-400 select-none"
+            x="222"
+            y="12"
+            fontSize="12"
+            fontWeight="500"
+            fill="currentColor"
           >
-            V
+            +
           </text>
         </g>
 
         {/* ============ TRANSISTOR A ============ */}
         <g onClick={() => toggleInput("a")} className="cursor-pointer group">
-          {/* Transistor body circle */}
+          {/* Transistor body circle - fill only (renders first, behind everything) */}
           <circle
             cx="200"
             cy="120"
             r="28"
             className={`transition-colors duration-300 ${
               inputs.a
-                ? "fill-amber-50 dark:fill-amber-950/30 stroke-amber-400 dark:stroke-yellow-500"
-                : "fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
+                ? "fill-amber-50 dark:fill-amber-950/30"
+                : "fill-neutral-100 dark:fill-neutral-900"
             }`}
-            strokeWidth="2"
           />
 
           {/* Collector (top) */}
@@ -300,6 +421,20 @@ export default function TransistorAndGate() {
             strokeLinecap="round"
           />
 
+          {/* Transistor body circle - stroke only (renders last, on top of everything) */}
+          <circle
+            cx="200"
+            cy="120"
+            r="28"
+            fill="none"
+            className={`transition-colors duration-300 ${
+              inputs.a
+                ? "stroke-amber-400 dark:stroke-yellow-500"
+                : "stroke-neutral-400 dark:stroke-neutral-600"
+            }`}
+            strokeWidth="2"
+          />
+
           {/* Invisible hit area */}
           <rect x="60" y="85" width="180" height="70" fill="transparent" />
         </g>
@@ -378,17 +513,16 @@ export default function TransistorAndGate() {
 
         {/* ============ TRANSISTOR B ============ */}
         <g onClick={() => toggleInput("b")} className="cursor-pointer group">
-          {/* Transistor body circle */}
+          {/* Transistor body circle - fill only (renders first, behind everything) */}
           <circle
             cx="200"
             cy="240"
             r="28"
             className={`transition-colors duration-300 ${
               inputs.b
-                ? "fill-amber-50 dark:fill-amber-950/30 stroke-amber-400 dark:stroke-yellow-500"
-                : "fill-neutral-100 dark:fill-neutral-900 stroke-neutral-400 dark:stroke-neutral-600"
+                ? "fill-amber-50 dark:fill-amber-950/30"
+                : "fill-neutral-100 dark:fill-neutral-900"
             }`}
-            strokeWidth="2"
           />
 
           {/* Collector (top) */}
@@ -490,6 +624,20 @@ export default function TransistorAndGate() {
             strokeLinecap="round"
           />
 
+          {/* Transistor body circle - stroke only (renders last, on top of everything) */}
+          <circle
+            cx="200"
+            cy="240"
+            r="28"
+            fill="none"
+            className={`transition-colors duration-300 ${
+              inputs.b
+                ? "stroke-amber-400 dark:stroke-yellow-500"
+                : "stroke-neutral-400 dark:stroke-neutral-600"
+            }`}
+            strokeWidth="2"
+          />
+
           {/* Invisible hit area */}
           <rect x="60" y="205" width="180" height="70" fill="transparent" />
         </g>
@@ -567,18 +715,6 @@ export default function TransistorAndGate() {
         </g>
 
         {/* ============ OUTPUT SECTION ============ */}
-        {/* Junction point */}
-        <circle
-          cx="200"
-          cy="310"
-          r="4"
-          className={`transition-colors duration-300 ${
-            isCircuitComplete
-              ? "fill-amber-400 dark:fill-yellow-400"
-              : "fill-neutral-400 dark:fill-neutral-600"
-          }`}
-        />
-
         {/* Horizontal wire to output */}
         <line
           x1="200"
@@ -590,7 +726,7 @@ export default function TransistorAndGate() {
               ? "stroke-amber-400 dark:stroke-yellow-400"
               : "stroke-neutral-300 dark:stroke-neutral-700"
           }`}
-          strokeWidth="2"
+          strokeWidth={isCircuitComplete ? 3 : 2}
           strokeLinecap="round"
         />
 
@@ -608,79 +744,6 @@ export default function TransistorAndGate() {
         >
           Out
         </text>
-
-        {/* ============ OUTPUT RESISTOR TO GROUND ============ */}
-        {/* Vertical wire down from junction */}
-        <line
-          x1="200"
-          y1="310"
-          x2="200"
-          y2="325"
-          className="stroke-neutral-300 dark:stroke-neutral-700"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-
-        {/* Output Resistor symbol (vertical) */}
-        <path
-          d="M200,325 L208,330 L192,340 L208,350 L192,360 L200,365"
-          fill="none"
-          className="stroke-neutral-400 dark:stroke-neutral-600"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* R_Out label */}
-        <text
-          x="225"
-          y="350"
-          fontSize="11"
-          className="fill-neutral-400 dark:fill-neutral-600 select-none"
-        >
-          R
-          <tspan fontSize="8" dy="2">Out</tspan>
-        </text>
-
-        {/* ============ GROUND SYMBOL ============ */}
-        <g className="text-neutral-500 dark:text-neutral-600">
-          <line
-            x1="200"
-            y1="365"
-            x2="200"
-            y2="380"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="185"
-            y1="380"
-            x2="215"
-            y2="380"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="190"
-            y1="386"
-            x2="210"
-            y2="386"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <line
-            x1="195"
-            y1="392"
-            x2="205"
-            y2="392"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-        </g>
 
         {/* ============ OUTPUT INDICATOR (glow when active) ============ */}
         <circle

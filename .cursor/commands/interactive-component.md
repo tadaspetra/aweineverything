@@ -41,13 +41,59 @@ When building interactive components for articles/essays, follow these quality s
 - Ensure **touch targets don't overlap** when scaled down
 - Test with **actual touch devices** or browser DevTools touch simulation
 
+## SVG Layering (Critical!)
+
+Render order in SVG determines what appears on top. Elements rendered **later** appear **on top**.
+
+**Correct render order (first to last):**
+1. **Background/inactive elements** (pull-down resistors, ground symbols, inactive wires)
+2. **Active wire segments**
+3. **Particle/flow animations**
+4. **Component fills** (e.g., transistor circle fills)
+5. **Component internals** (e.g., transistor collector, emitter, base lines)
+6. **Component strokes/outlines** (rendered LAST so nothing crosses over them)
+7. **Interactive indicators** (output lights, input dots)
+
+**Common layering mistakes to avoid:**
+- Drawing component outline with fill together - split into separate fill and stroke elements
+- Rendering inactive elements after active ones (gray wires appearing on top of yellow)
+- Particles rendering behind wires they should flow along
+
 ## SVG Best Practices
 
 - Use **viewBox** for responsive scaling, let width be 100%
-- **Layer elements correctly**: base/inactive elements first, active/highlighted elements on top
+- **Segment wires at component boundaries** - don't draw wires through components, stop at edges
 - **Avoid blur/glow filters on main elements** - they wash out colors on light backgrounds. Reserve glow for accent elements only (like output indicators)
 - Use **strokeWidth and fill changes** for state indication, not opacity
 - Use **`transition-all duration-300`** classes on SVG elements for smooth state changes
+- **Avoid transparency in fills** (e.g., `fill-amber-950/30`) - elements behind will show through
+
+## Wire & Connection Consistency
+
+- **All connected wires must have matching strokeWidth** - mismatched widths create visible "bumps" at junctions
+- **When active state changes thickness, ALL connected wires should change together** - use the same dynamic strokeWidth: `strokeWidth={isActive ? 3 : 2}`
+- **Use `strokeLinecap="round"`** for clean wire ends
+- **No unnecessary junction circles** - simple wire intersections don't need visible dots
+- **Wires from voltage sources should match the main wire thickness**
+
+## Circuit/Electrical Component Standards
+
+### Voltage Sources
+- Use **standard battery symbol** (two parallel lines of different lengths with + symbol), not abstract circles with "V"
+- Battery should be **yellow/amber colored** since it's always "on" and providing power
+- Ensure battery terminal thickness matches connecting wire thickness
+
+### Transistors
+- **Match reference implementations exactly** - copy coordinates from working examples
+- Include **arrow on emitter** (pointing outward for NPN)
+- **Separate circle fill and stroke** - fill renders first, stroke renders LAST (on top of all internal elements)
+- Internal structure: vertical bar, collector-to-bar diagonal, emitter-from-bar diagonal, base horizontal
+- **Circle outline must be on top** so wires don't visually cross it
+
+### Current Flow Visualization
+- Current flows to the **OUTPUT**, not through pull-down resistors to ground
+- **Particles should follow the actual signal path** (e.g., V → transistors → output, not V → transistors → ground)
+- Pull-down resistors remain gray/inactive - they just hold the output low when transistors are off
 
 ## Color Strategy
 
@@ -57,6 +103,7 @@ When showing "flow" or "active" states (like electricity):
 - Use **neutral colors** (grey) for inactive states  
 - **All connected elements should share the color** - wire, contact points, labels, output indicator
 - Colors should **propagate logically** (e.g., electricity colors elements only up to an open switch)
+- **Voltage sources are always active** - battery symbols should always be yellow
 
 ## Code Quality
 
@@ -64,3 +111,4 @@ When showing "flow" or "active" states (like electricity):
 - **Separate concerns**: state logic, animation logic (useEffect), rendering
 - **Clean up animations** in useEffect return functions (cancelAnimationFrame)
 - Use **useRef** for animation frame IDs and counters that don't need to trigger re-renders
+- **Match existing component patterns** - when similar components exist, copy their structure exactly before customizing

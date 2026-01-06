@@ -22,6 +22,7 @@ sources:
 
 import SwitchAndGate from './_components/SwitchAndGate.tsx';
 import TransistorAndGate from './_components/TransistorAndGate.tsx';
+import SwitchAndTransistor from './_components/SwitchAndTransistor.tsx';
 
 In college, I decided to study Computer Engineering, solely because I could not understand how you can turn electricity into everything we use computers for. How does the same thing that turns on a light bulb:
 
@@ -33,11 +34,11 @@ And all this is created by typing words in a specific sequence on a computer.
 
 It all seems like magic, but magic doesn't exist.
 
-To begin understanding computers, let's look at some of the first computers ever made, because even those are incredible.
+To begin understanding computers, let's look at how the first computers were invented.
 
 ## Boolean
 
-Everything started when George Boole tried to mathematize **logic**, which at that point was a branch of philosophy.
+Everything started when George Boole tried to mathematize logic, which at that point was a branch of philosophy.
 
 Logical philosophy is credited to Aristotle, and it was a method for thinking clearly. It was used to find what is true based on other truths or falsehoods. For example:
 
@@ -57,7 +58,7 @@ Before George Boole, this was all done linguistically, using full sentences. Boo
 
 ![Boole's Book](./_assets/booles-book.png)
 
-He released this new system to the world in his book "The Mathematical Analysis of Logic". This system eventually became known as "Boolean Algebra".
+He released this new system to the world in his book *The Mathematical Analysis of Logic*. This system eventually became known as *Boolean Algebra*.
 
 Boolean Algebra consisted of three core operations
 
@@ -73,7 +74,7 @@ If we go back to our previous example, this can now be expressed using Boolean a
 
 Until the 1930s, Boolean Algebra was used mainly to help philosophers be more precise and clear with their logical arguments.
 
-That is, until Claude Shannon, while working on his master's thesis, realized you can apply Boolean Algebra to circuits. In circuits, electricity can be in 2 states: ON and OFF, similar to how Boolean Algebra has two states: TRUE or FALSE. He showed that you can write an equation to calculate the output of a circuit using Boolean algebra.
+That is, until Claude Shannon, while working on his master's thesis, realized you can apply Boolean Algebra to circuits. In circuits, electricity can be in 2 states: ON and OFF, similar to how Boolean Algebra has two states: TRUE or FALSE. He was curious whether these two can be conncected. Eventually, he proved that they are by showing that you can write an equation to calculate the output of a circuit using Boolean algebra.
 
 This was an incredible realization, because until then, circuits were built on the fly. There were no pre-planned circuits, which means they couldn't be very complicated.
 
@@ -89,11 +90,11 @@ This is where transistors come in and change everything.
 
 The transistor allows you to implement logic that can change without any physical alterations. It can change logic using only electricity. **This is considered one of the greatest inventions of the 20th century.**
 
-![[Pasted image 20251120083133.png]]
+![Wikipedia Quote](./_assets/transistor-wiki.png)
 
 A transistor is similar to a switch, but instead of having to move it up and down, you apply a voltage to the **Base**.
 
-![[Drawing 3 5.png]]
+<SwitchAndTransistor client:load />
 
 There are 3 parts to the most common transistor, called a Bipolar Junction Transistor.
 
