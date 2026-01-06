@@ -69,5 +69,22 @@ const ogImageURL = new URL(ogImage, Astro.site).toString();
     class="bg-white dark:bg-neutral-900 text-gray-900 dark:text-white min-h-screen transition-colors duration-200"
   >
     <slot />
+    <script>
+      // Make all links within articles open in a new tab
+      document.addEventListener("DOMContentLoaded", () => {
+        const articles = document.querySelectorAll("article");
+        articles.forEach((article) => {
+          const links = article.querySelectorAll("a[href]");
+          links.forEach((link) => {
+            const href = link.getAttribute("href");
+            // Only add target="_blank" to external links (not anchors or relative paths)
+            if (href && (href.startsWith("http://") || href.startsWith("https://"))) {
+              link.setAttribute("target", "_blank");
+              link.setAttribute("rel", "noopener noreferrer");
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>
