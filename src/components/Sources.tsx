@@ -21,7 +21,9 @@ export function Sources({ sources }: SourcesProps) {
         className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer bg-transparent border-none p-0 text-sm flex items-center gap-1.5"
       >
         <svg
-          className={`w-3 h-3 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}
+          className={`w-3 h-3 transition-transform duration-200 ${
+            isOpen ? "rotate-90" : ""
+          }`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -39,7 +41,7 @@ export function Sources({ sources }: SourcesProps) {
           isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >
-        <ul className="overflow-hidden list-none pl-0 m-0 pt-3 space-y-0.5">
+        <ul className="overflow-hidden list-none pl-0 m-0 pt-2 -space-y-3">
           {sources.map((source, index) => {
             const domain = new URL(source.url).hostname.replace("www.", "");
             return (
@@ -48,14 +50,28 @@ export function Sources({ sources }: SourcesProps) {
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="plain-link group flex flex-wrap items-center gap-x-1.5 gap-y-0 text-sm py-0.5 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
+                  className="plain-link group flex flex-wrap items-center gap-x-1.5 gap-y-0 text-md py-0.5 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
                 >
                   <span>{source.title}</span>
                   <span className="flex items-center gap-1.5">
-                    <span className="text-neutral-300 dark:text-neutral-600">·</span>
-                    <span className="text-xs text-neutral-400 dark:text-neutral-500">{domain}</span>
-                    <svg className="w-2.5 h-2.5 opacity-0 group-hover:opacity-50 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    <span className="text-neutral-300 dark:text-neutral-600">
+                      ·
+                    </span>
+                    <span className="text-sm text-neutral-400 dark:text-neutral-500">
+                      {domain}
+                    </span>
+                    <svg
+                      className="w-2.5 h-2.5 opacity-0 group-hover:opacity-50 transition-opacity"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
                     </svg>
                   </span>
                 </a>

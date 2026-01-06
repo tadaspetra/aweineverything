@@ -102,6 +102,7 @@
 
   a.plain-link {
     @apply text-inherit;
+    background-image: none !important;
   }
 
   a.plain-link::after {
