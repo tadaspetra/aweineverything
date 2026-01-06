@@ -48,7 +48,8 @@ export default function RGBLightDemo() {
   const topRadius = 8;
   const frameTopY = 16;
   const pixelTopY = frameTopY;
-  const shadowTopY = frameTopY + 2; // 2px inset for shadow
+  const shadowInset = 2; // 2px inset for shadow
+  const shadowTopY = frameTopY + shadowInset;
 
   // Calculate path strings with consistent radius
   const pixelPath = `M 50 49 L 50 ${pixelTopY + topRadius} Q 50 ${pixelTopY}, ${
@@ -61,13 +62,17 @@ export default function RGBLightDemo() {
   } Q 50 ${frameTopY}, ${50 + topRadius} ${frameTopY} L ${
     270 - topRadius
   } ${frameTopY} Q 270 ${frameTopY}, 270 ${frameTopY + topRadius} L 270 160`;
-  const shadowPath = `M 52 47 L 52 ${
-    shadowTopY + topRadius - 2
-  } Q 52 ${shadowTopY}, ${52 + topRadius - 2} ${shadowTopY} L ${
-    268 - topRadius + 2
-  } ${shadowTopY} Q 268 ${shadowTopY}, 268 ${
-    shadowTopY + topRadius - 2
-  } L 268 47 L 52 47 Z`;
+  // Shadow path: inset by shadowInset on all sides, uses same radius
+  const shadowLeft = 50 + shadowInset;
+  const shadowRight = 270 - shadowInset;
+  const shadowBottom = 49 - shadowInset;
+  const shadowPath = `M ${shadowLeft} ${shadowBottom} L ${shadowLeft} ${
+    shadowTopY + topRadius
+  } Q ${shadowLeft} ${shadowTopY}, ${shadowLeft + topRadius} ${shadowTopY} L ${
+    shadowRight - topRadius
+  } ${shadowTopY} Q ${shadowRight} ${shadowTopY}, ${shadowRight} ${
+    shadowTopY + topRadius
+  } L ${shadowRight} ${shadowBottom} L ${shadowLeft} ${shadowBottom} Z`;
 
   // LED component - classic through-hole LED shape
   const LED = ({
@@ -192,29 +197,31 @@ export default function RGBLightDemo() {
         </defs>
 
         {/* Pixel screen at top - rendered first so frame overlaps */}
-        <g style={{ filter: anyLightOn ? "url(#pixelGlow)" : "none" }}>
-          {/* Base pixel color - using defined radius */}
-          <path
-            d={pixelPath}
-            fill={getPixelColor()}
-            className="transition-all duration-300"
-          />
-          {/* Pixel grid overlay */}
-          <path
-            d={pixelPath}
-            fill="url(#pixelGrid)"
-            className="transition-opacity duration-300"
-            style={{ opacity: anyLightOn ? 0.5 : 0.3 }}
-          />
-          {/* Subtle inner shadow/depth - slightly inset from pixel edges, all sides, less radius */}
-          <path
-            d={shadowPath}
-            fill="none"
-            stroke="black"
-            strokeWidth="3"
-            strokeOpacity={isWhite ? 0.05 : anyLightOn ? 0.1 : 0.15}
-          />
+        <g clipPath="url(#pixelClip)">
+          <g style={{ filter: anyLightOn ? "url(#pixelGlow)" : "none" }}>
+            {/* Base pixel color - using defined radius */}
+            <path
+              d={pixelPath}
+              fill={getPixelColor()}
+              className="transition-all duration-300"
+            />
+            {/* Pixel grid overlay */}
+            <path
+              d={pixelPath}
+              fill="url(#pixelGrid)"
+              className="transition-opacity duration-300"
+              style={{ opacity: anyLightOn ? 0.5 : 0.3 }}
+            />
+          </g>
         </g>
+        {/* Subtle inner shadow/depth - slightly inset from pixel edges, all sides, same radius */}
+        <path
+          d={shadowPath}
+          fill="none"
+          stroke="black"
+          strokeWidth="3"
+          strokeOpacity={isWhite ? 0.05 : anyLightOn ? 0.1 : 0.15}
+        />
 
         {/* Housing frame - open at bottom, using defined radius */}
         <path

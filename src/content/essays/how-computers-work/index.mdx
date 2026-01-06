@@ -198,6 +198,8 @@ But the result is still the same. You end up with 1's and 0's that either allow 
 
 You can actually see these 1's and 0's by first compiling your Dart program using `dart compile exe your-file-name.dart`, which creates a compiled program that is runnable on any computer. And you can see the contents of that file by running `xxd -b your-file-name.exe` on a Mac.
 
-![[Pasted image 20251120141331.png]]
+![Binary Output](./_assets/binary.png)
 
 On the left side, you have the offset (memory address within the file), followed by the actual binary, followed by the ASCII representation of the binary. ASCII is a way to represent letters and characters with binary, but that deep dive is for a different article.
+
+Thank you for reading. If you have an improvement please [leave an issue or pull request on GitHub](https://github.com/tadaspetra/aweineverything/tree/main/src/content/essays/how-computers-work).
